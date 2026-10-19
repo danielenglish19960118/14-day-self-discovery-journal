@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>14-Day Self-Discovery & Reclamation Journal</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-md mx-auto px-4 py-3 flex justify-between items-center">
+            <h1 class="font-bold text-slate-800 text-base">🌱 14-Day Reclamation Journal</h1>
+            <span class="text-xs font-semibold px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-full" id="progress-badge">0 / 14 Completed</span>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 max-w-md mx-auto w-full p-4 pb-20">
+        
+        <!-- Welcome Banner -->
+        <div class="bg-gradient-to-r from-teal-700 to-slate-800 text-white rounded-xl p-5 mb-6 shadow-sm">
+            <h2 class="text-xl font-bold mb-1">Reclaim Your Autonomy & Spiritual Freedom</h2>
+            <p class="text-xs text-teal-100 leading-relaxed">A safe, gentle space to deconstruct high-control dynamics, unpack weaponized submission, and heal from unearned guilt.</p>
+        </div>
+
+        <!-- Days Navigation List (Phase Grouped) -->
+        <div id="journal-app">
+            <!-- Phase 1 -->
+            <div class="mb-6">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Phase 1: Safety & Emotional Awareness (Days 1–4)</h3>
+                <div class="space-y-2" id="phase-1-list"></div>
+            </div>
+
+            <!-- Phase 2 -->
+            <div class="mb-6">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Phase 2: Deconstructing Authority & Submission (Days 5–9)</h3>
+                <div class="space-y-2" id="phase-2-list"></div>
+            </div>
+
+            <!-- Phase 3 -->
+            <div class="mb-6">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Phase 3: Boundaries & Sovereign Living (Days 10–14)</h3>
+                <div class="space-y-2" id="phase-3-list"></div>
+            </div>
+        </div>
+
+        <!-- Detail Modal / View -->
+        <div id="detail-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden z-50 flex justify-center items-end sm:items-center">
+            <div class="bg-white w-full max-w-md max-h-[90vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl p-5 shadow-2xl space-y-4">
+                <div class="flex justify-between items-center border-b pb-3">
+                    <span id="modal-day-num" class="text-xs font-bold text-teal-700 uppercase tracking-wider">Day 1</span>
+                    <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 font-bold text-lg">&times;</button>
+                </div>
+
+                <h3 id="modal-title" class="text-lg font-bold text-slate-800"></h3>
+
+                <!-- Core English Prompt -->
+                <div class="bg-slate-100 p-3.5 rounded-lg text-sm text-slate-700 italic border-l-4 border-teal-600" id="modal-prompt"></div>
+
+                <!-- Scripture & Counter-Perspective (Deconstruction) -->
+                <div id="scripture-box" class="bg-amber-50 border border-amber-200 rounded-lg p-3.5 space-y-2 hidden">
+                    <div class="text-xs font-bold text-amber-900 flex items-center gap-1">
+                        📖 Contextual Rebuttal & Scripture Insight
+                    </div>
+                    <div id="modal-scripture" class="text-xs text-amber-900 font-medium"></div>
+                    <div id="modal-deconstruction" class="text-xs text-amber-800 leading-relaxed border-t border-amber-200/60 pt-2"></div>
+                </div>
+
+                <!-- User Reflection Form -->
+                <div class="space-y-2 pt-2">
+                    <label class="block text-xs font-semibold text-slate-600">✍️ Your Private Reflection (Saved locally on your device):</label>
+                    <textarea id="modal-input" rows="5" class="w-full p-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none" placeholder="Write your honest thoughts, feelings, or realization here..."></textarea>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex gap-2 pt-2">
+                    <button onclick="saveReflection()" class="flex-1 bg-teal-700 hover:bg-teal-800 text-white font-medium py-2.5 rounded-lg text-sm transition">Save Journal Entry</button>
+                    <button onclick="closeModal()" class="px-4 bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium py-2.5 rounded-lg text-sm">Close</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-3 text-center text-xs text-slate-400">
+        © 2026 Yang Cheng-han. All Rights Reserved.
+    </footer>
+
+    <!-- Application Script -->
+    <script>
+        const journalData = [
+            // Phase 1
+            { day: 1, phase: 1, title: "Identifying Emotional Noise", prompt: "What am I feeling right now, without judging if it is 'right' or 'wrong'?", scripture: "", decon: "" },
+            { day: 2, phase: 1, title: "Sensing Physical Safety", prompt: "Where in my body do I hold tension when I feel pressured to conform?", scripture: "", decon: "" },
+            { day: 3, phase: 1, title: "Guilt vs. Truth", prompt: "Is this guilt coming from my own internal values, or from external expectations?", scripture: "", decon: "" },
+            { day: 4, phase: 1, title: "Courage to Honor Imperfection", prompt: "What is one small truth about myself I have been hiding to keep the peace?", scripture: "", decon: "" },
+            
+            // Phase 2: Deconstruction & Scripture Rebuttal
+            { 
+                day: 5, phase: 2, title: "Deconstructing Mandatory Submission", 
+                prompt: "Where did I mistake forced self-silencing for genuine love or faithfulness?", 
+                scripture: "Ephesians 5:21 - 'Submit to one another out of reverence for Christ.'", 
+                decon: "Deconstruction Insight: Scripture emphasizes mutual submission and reciprocal respect, not one-way compliance to human authority. Demanding that you silence your voice violates the principle of mutual care." 
+            },
+            { 
+                day: 6, phase: 2, title: "Authority as Service, Not Control", 
+                prompt: "Has any leader used spiritual authority to control my choices or dismiss my legitimate concerns?", 
+                scripture: "1 Peter 5:2-3 - 'Be shepherds of God's flock... not lording it over those entrusted to you, but being examples to the flock.'", 
+                decon: "Deconstruction Insight: Scripture explicitly forbids leaders from 'lording over' individuals. Jesus defined authority through service, not coercion or guilt-tripping." 
+            },
+            { 
+                day: 7, phase: 2, title: "Obeying Conscience Over Human Pressure", 
+                prompt: "When did complying with human authority force me to violate my own conscience?", 
+                scripture: "Acts 5:29 - 'We must obey God rather than human beings!'", 
+                decon: "Deconstruction Insight: Human leaders are not God. When institutional demands cause harm or violate your conscience, honoring inner truth over human approval is an act of integrity." 
+            },
+            { 
+                day: 8, phase: 2, title: "Unpacking Conditional Approval", 
+                prompt: "Do I believe I am worthy of love only when I perform or obey perfectly?", 
+                scripture: "Galatians 5:1 - 'It is for freedom that Christ has set us free. Stand firm, then, and do not let yourselves be burdened again by a yoke of slavery.'", 
+                decon: "Deconstruction Insight: Truth yields peace and freedom, not perpetual anxiety. Teachings that rely on fear and shame impose a 'yoke of bondage' rather than genuine liberation." 
+            },
+            { 
+                day: 9, phase: 2, title: "Evaluating Spiritual Fruits", 
+                prompt: "What are the actual fruits of this teaching in my life—peace, or fear and shame?", 
+                scripture: "Matthew 7:16 - 'By their fruit you will recognize them.'", 
+                decon: "Deconstruction Insight: Tree character is known by its fruit. Systems or teachings that produce chronic guilt, numbness, or mental distress reveal their true nature through those outcomes." 
+            },
+
+            // Phase 3
+            { day: 10, phase: 3, title: "Setting Clear Boundaries", prompt: "What is one hard 'No' I need to give to protect my mental energy?", scripture: "", decon: "" },
+            { day: 11, phase: 3, title: "Releasing Unearned Responsibility", prompt: "Whose emotions am I trying to manage that are not my responsibility?", scripture: "", decon: "" },
+            { day: 12, phase: 3, title: "Rebuilding Inner Trust", prompt: "What does my inner wisdom tell me when I stop listening to external noise?", scripture: "", decon: "" },
+            { day: 13, phase: 3, title: "Embracing Personal Freedom", prompt: "How will I choose to spend my time and energy today without asking for permission?", scripture: "", decon: "" },
+            { day: 14, phase: 3, title: "Declaration of Autonomy", prompt: "Write a personal declaration of autonomy for your future self.", scripture: "", decon: "" }
+        ];
+
+        let currentDay = null;
+
+        function renderApp() {
+            let completedCount = 0;
+            [1, 2, 3].forEach(p => {
+                const listEl = document.getElementById(`phase-${p}-list`);
+                listEl.innerHTML = '';
+                journalData.filter(d => d.phase === p).forEach(item => {
+                    const savedText = localStorage.getItem(`day_${item.day}`) || '';
+                    if (savedText.trim() !== '') completedCount++;
+                    
+                    const isDone = savedText.trim() !== '';
+                    const card = document.createElement('div');
+                    card.className = `p-3.5 rounded-xl border transition cursor-pointer flex justify-between items-center ${isDone ? 'bg-emerald-50/60 border-emerald-200' : 'bg-white border-slate-200 hover:border-teal-400'}`;
+                    card.onclick = () => openModal(item.day);
+                    card.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <span class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${isDone ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-600'}">${item.day}</span>
+                            <div>
+                                <h4 class="text-sm font-semibold text-slate-800">${item.title}</h4>
+                                <p class="text-xs text-slate-400 line-clamp-1">${item.prompt}</p>
+                            </div>
+                        </div>
+                        <span class="text-xs ${isDone ? 'text-emerald-700 font-bold' : 'text-slate-300'}">${isDone ? '✓ Done' : '→'}</span>
+                    `;
+                    listEl.appendChild(card);
+                });
+            });
+
+            document.getElementById('progress-badge').innerText = `${completedCount} / 14 Completed`;
+        }
+
+        function openModal(dayNum) {
+            currentDay = dayNum;
+            const data = journalData.find(d => d.day === dayNum);
+            document.getElementById('modal-day-num').innerText = `Day ${data.day} • Phase ${data.phase}`;
+            document.getElementById('modal-title').innerText = data.title;
+            document.getElementById('modal-prompt').innerText = `"${data.prompt}"`;
+            
+            const scriptureBox = document.getElementById('scripture-box');
+            if (data.scripture) {
+                document.getElementById('modal-scripture').innerText = data.scripture;
+                document.getElementById('modal-deconstruction').innerText = data.decon;
+                scriptureBox.classList.remove('hidden');
+            } else {
+                scriptureBox.classList.add('hidden');
+            }
+
+            document.getElementById('modal-input').value = localStorage.getItem(`day_${dayNum}`) || '';
+            document.getElementById('detail-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('detail-modal').classList.add('hidden');
+        }
+
+        function saveReflection() {
+            if (!currentDay) return;
+            const text = document.getElementById('modal-input').value;
+            localStorage.setItem(`day_${currentDay}`, text);
+            closeModal();
+            renderApp();
+        }
+
+        // Initialize App
+        renderApp();
+    </script>
+</body>
+</html>
